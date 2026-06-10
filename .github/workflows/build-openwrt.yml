@@ -72,7 +72,10 @@ jobs:
         
         git clone https://github.com/jerrykuku/luci-theme-argon.git
         git clone https://github.com/jerrykuku/luci-app-argon-config.git
-        git clone https://github.com/vernesong/OpenClash.git
+        
+        git clone --depth 1 https://github.com/vernesong/openclash.git
+        mv openclash/luci-app-openclash/ ./
+        rm -rf openclash
 
     - name: 注入并应用自定义配置 (.config)
       run: |
