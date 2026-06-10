@@ -102,4 +102,4 @@ jobs:
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
         name: OpenWrt_BeeconMini_PR22390_Firmware
-        path: ${{ env:FIRMWARE }}
+        path: ${{ env.FIRMWARE }}
