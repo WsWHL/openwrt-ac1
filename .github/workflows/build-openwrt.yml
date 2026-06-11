@@ -99,24 +99,12 @@ jobs:
         echo -e "$(nproc) thread compile"
         # 考虑到新设备适配可能有潜在冲突，先尝试多线程，失败则自动切换为单线程并输出详细日志
         make -j$(nproc) || make -j1 V=s
-        echo "status=success" >> $GITHUB_OUTPUT
-
-    - name: 整理编译产物
-      id: organize
-      if: steps.compile.outputs.status == 'success' && !cancelled()
-      run: |
-        cd openwrt/bin/targets/mediatek/filogic
+        
         # 移除零散的包，只保留固件镜像文件
+        cd openwrt/bin/targets/mediatek/filogic
         rm -rf packages
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
-
-    - name: 上传固件至 GitHub Artifacts
-      uses: actions/upload-artifact@v4
-      if: steps.organize.outputs.status == 'success' && !cancelled()
-      with:
-        name: OpenWrt_BeeconMini_Seed_AC1
-        path: ${{ env.FIRMWARE }}
 
   # ================= 核心：自动发布到 Releases =================
     - name: 自动生成 Release 标签与时间戳
@@ -144,4 +132,4 @@ jobs:
           * 如果是第一次从原厂固件刷入，请使用 `*factory.bin` 固件。
           * 如果已经是 OpenWrt 系统，请在后台选择 `*sysupgrade.bin` 固件升级。
         # 核心：告诉 Action 去刚才整理好的绝对路径下抓取所有的 bin 文件上传
-        files: ${{ env.FIRMWARE }}/*.bin
+        files: ${{ env.FIRMWARE }}/openwrt-*.bin
