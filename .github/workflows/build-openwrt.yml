@@ -101,7 +101,7 @@ jobs:
         make -j$(nproc) || make -j1 V=s
         
         # 移除零散的包，只保留固件镜像文件
-        cd openwrt/bin/targets/mediatek/filogic
+        cd bin/targets/mediatek/filogic
         rm -rf packages
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
