@@ -107,6 +107,7 @@ jobs:
         # 移除零散的包，只保留固件镜像文件
         cd bin/targets/mediatek/filogic
         rm -rf packages
+        echo "DATE_TIME=$(date +"%Y.%m.%d %H:%M:%S")" >> $GITHUB_ENV
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
 
