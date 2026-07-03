@@ -8,7 +8,7 @@ on:
 
 env:
   REPO_URL: https://github.com/ttc0419/openwrt
-  REPO_BRANCH: beeconmini/seed-ac1
+  REPO_BRANCH: main
   CONFIG_FILE: seed-ac1.config
   TZ: Asia/Shanghai
 
