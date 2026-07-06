@@ -69,9 +69,7 @@ jobs:
         cd openwrt
         curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
         
-        cd package
-        git clone https://github.com/nickbash11/aic8800-usb_openwrt kernel/aic8800-usb
-        
+        cd package      
         # 创建一个名为 custom 的文件夹用来存放你自己的插件（可选，方便管理）
         mkdir -p custom && cd custom
         
@@ -88,7 +86,6 @@ jobs:
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         cd openwrt
-        # 1. 强制在 .config 中写入该驱动为编译成独立模块（m）
         # 使用 defconfig 补全由于引入新设备带来的依赖项
         make defconfig
 
@@ -99,24 +96,6 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
-    # 单独编译这个包（可选：可以在大编译前先单独编译它，确保不会被其他错误打断）
-    - name: Compile aic8800 IPK
-      run: |
-        cd openwrt
-        make tools/compile -j$(nproc) V=s || make tools/compile V=s
-        make toolchain/compile -j$(nproc) V=s || make toolchain/compile V=s
-        make package/aic8800-usb/compile V=s -j$(nproc)
-
-  # 新增步骤 3：收集并单独上传 aic8800 的 ipk 安装包
-    - name: Collect and Upload aic8800 IPK
-      uses: actions/upload-artifact@v4
-      with:
-        name: aic8800-usb-ipk  # 在 GitHub 下载时的压缩包名称
-        path: |
-          openwrt/bin/targets/*/*/*aic8800*
-          openwrt/bin/packages/*/*/*aic8800*
-        if-no-files-found: warn
-
     - name: 核心编译阶段
       id: compile
       run: |
@@ -126,8 +105,8 @@ jobs:
         make -j$(nproc) || make -j1 V=s
         
         # 移除零散的包，只保留固件镜像文件
-        # cd bin/targets/mediatek/filogic
-        # rm -rf packages
+        cd bin/targets/mediatek/filogic
+        rm -rf packages
         echo "DATE_TIME=$(date +"%Y.%m.%d %H:%M:%S")" >> $GITHUB_ENV
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
