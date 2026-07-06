@@ -7,8 +7,8 @@ on:
       - main
 
 env:
-  REPO_URL: https://github.com/ttc0419/openwrt
-  REPO_BRANCH: main
+  REPO_URL: https://github.com/WsWHL/openwrt.git
+  REPO_BRANCH: beeconmini-ac1
   CONFIG_FILE: seed-ac1.config
   TZ: Asia/Shanghai
 
@@ -39,30 +39,17 @@ jobs:
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
-    # ================= 核心修正：合并 PR #22390 补丁 =================
-    # - name: 下载并应用 BeeconMini AC1 专属补丁 (PR #22390)
-    #   run: |
-    #     cd openwrt
-    #     # 配置临时 git 用户信息以允许 commit/am 操作
-    #     git config --global user.email "action@github.com"
-    #     git config --global user.name "GitHub Action"
-        
-    #     echo "正在下载 PR #22390 的补丁文件..."
-    #     curl -fsSL https://github.com/openwrt/openwrt/pull/22390.patch -o beeconmini.patch
-        
-    #     echo "正在将补丁应用到当前源码主线..."
-    #     git am beeconmini.patch || {
-    #       echo "补丁应用失败，尝试强制应用或使用 git apply..."
-    #       git am --abort
-    #       git apply --reject beeconmini.patch
-    #     }
-    # =================================================================
-
     - name: 更新并安装 Feeds 扩展包
       run: |
         cd openwrt
         ./scripts/feeds update -a
         ./scripts/feeds install -a
+
+    - name: 集成 AIC8800 USB WiFi 驱动
+      run: |
+        cd openwrt
+        echo "正在克隆 AIC8800 USB WiFi 驱动..."
+        git clone https://github.com/nickbash11/aic8800-usb_openwrt package/kernel/aic8800-usb
 
     - name: 下载单个第三方插件源码
       run: |
