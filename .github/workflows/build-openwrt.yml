@@ -117,7 +117,6 @@ jobs:
         body: |
           ### 🚀 BeeconMini SEED AC1 专属固件发布                    
           **编译完成时间：** ${{ env.DATE_TIME }} (北京时间)
-          **源码分支：** `ttc0419:beeconmini/seed-ac1`
                     
           #### 💾 固件刷机说明：
           * 如果是第一次从原厂固件刷入，请使用 `*factory.bin` 固件。
