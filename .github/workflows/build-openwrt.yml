@@ -45,12 +45,6 @@ jobs:
         ./scripts/feeds update -a
         ./scripts/feeds install -a
 
-    - name: 集成 AIC8800 USB WiFi 驱动
-      run: |
-        cd openwrt
-        echo "正在克隆 AIC8800 USB WiFi 驱动..."
-        git clone https://github.com/nickbash11/aic8800-usb_openwrt package/kernel/aic8800-usb
-
     - name: 下载单个第三方插件源码
       run: |
         cd openwrt
